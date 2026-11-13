@@ -33,7 +33,7 @@ export default function StreetScene() {
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.115, 1.4]} receiveShadow material={std('#c9ced8', 0.9)}><planeGeometry args={[18, 2.6]} /></mesh>
         {[-6, -3, 0, 3, 6].map((x) => <mesh key={x} rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.12, 1.4]} material={std('#ffffff', 0.8)}><planeGeometry args={[1.2, 0.12]} /></mesh>)}
         <SkippiStall position={[0, 0.1, -1.5]} />
-        <Person look={LOOKS.seller} pose={react ?? 'talk'} mood={mood} position={[0, 0.1, -2.35]} />
+        <Person look={LOOKS.seller} pose={react ?? 'talk'} mood={mood} position={[0, 0.1, -2.35]} say={outcome ? (ok ? 'Great decision!' : 'Uh-oh… that hurt.') : undefined} />
         <Shop position={[-4.6, 0.1, -2.6]} rotationY={0.35} stocked={stage !== 'shopkeeper' && stage !== 'online'} open={stage !== 'online' || !!ok} />
         <Lamp position={[3.2, 0.1, -0.2]} on={winter} />
         <group position={[-2.6, 0.1, 0.4]} rotation={[0, 0.5, 0]}><Roo pose={outcome ? (ok ? 'cheer' : 'think') : 'idle'} scale={0.85} /></group>
@@ -50,7 +50,12 @@ export default function StreetScene() {
 }
 
 function StageProps({ stage, react, mood, ok }: { stage: Scenario['stage']; react: Pose | null; mood: 'happy' | 'sad' | 'neutral'; ok: boolean }) {
-  const P = (look: keyof typeof LOOKS, pose: Pose, pos: [number, number, number]) => <Person look={LOOKS[look]} pose={react ?? pose} mood={mood} position={pos} />;
+  let said = false;
+  const P = (look: keyof typeof LOOKS, pose: Pose, pos: [number, number, number]) => {
+    const line = !said && !react ? LINES[stage] : undefined;
+    said = true;
+    return <Person look={LOOKS[look]} pose={react ?? pose} mood={mood} position={pos} say={line} />;
+  };
   switch (stage) {
     case 'customer':
       return <>{P('kid1', 'talk', [0.6, 0.1, 1.2])}{P('kid2', 'idle', [-0.4, 0.1, 1.5])}<IcePop color="#ffb000" flavour="Mango" length={2} scale={1.2} position={[2, 0.1, 0.2]} /></>;
@@ -84,6 +89,24 @@ function StageProps({ stage, react, mood, ok }: { stage: Scenario['stage']; reac
       return <><Podium position={[2.8, 0.1, 0.2]} h={0.4} r={0.9} top="#ffa514" /><mesh position={[2.8, 1.05, 0.2]} material={glossy('#ffc53d', 0.2)}><cylinderGeometry args={[0.35, 0.12, 0.6, 24]} /></mesh>{P('ravi', 'present', [0.8, 0.1, 1.2])}{P('anuja', 'idle', [-0.1, 0.1, 1.4])}</>;
   }
 }
+
+const LINES: Record<Scenario['stage'], string> = {
+  customer: 'We love mango! Anything new?',
+  packaging: 'This packaging looks boring…',
+  winter: 'Too cold for ice pops today!',
+  parent: 'Is this made hygienically?',
+  shopkeeper: 'Why should I stock this?',
+  competitor: 'That one is cheaper…',
+  online: 'Saw it online — no shop has it!',
+  repeat: 'We tried it once. Again?',
+  school: 'Join our summer event?',
+  city: 'New city, new customers!',
+  inventory: 'So much unsold stock!',
+  losses: 'Sales are up… why losses?',
+  global: 'Should we go international?',
+  distributor: 'I can’t sell all this stock.',
+  billion: 'How do we reach a billion?',
+};
 
 function Globe() {
   const g = useRef<THREE.Mesh>(null);

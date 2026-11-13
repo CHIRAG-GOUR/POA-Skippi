@@ -1,6 +1,6 @@
 import { useMemo, useRef, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Outlines, RoundedBox } from '@react-three/drei';
+import { Html, Outlines, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
 /* ==========================================================================
@@ -169,9 +169,9 @@ const collarGeo = (() => {
 
 /* ------------------------------------------------------------------ Person */
 export function Person({
-  look, pose = 'idle', position = [0, 0, 0], rotationY = 0, scale = 1, onClick, children, mood = 'happy', castShadow = true,
+  look, pose = 'idle', position = [0, 0, 0], rotationY = 0, scale = 1, onClick, children, mood = 'happy', castShadow = true, say,
 }: {
-  look: Look; pose?: Pose; position?: [number, number, number]; rotationY?: number; scale?: number; onClick?: () => void; children?: ReactNode; mood?: 'happy' | 'neutral' | 'sad' | 'wow'; castShadow?: boolean;
+  say?: string; look: Look; pose?: Pose; position?: [number, number, number]; rotationY?: number; scale?: number; onClick?: () => void; children?: ReactNode; mood?: 'happy' | 'neutral' | 'sad' | 'wow'; castShadow?: boolean;
 }) {
   const h = look.height ?? 1;
   const hs = look.headScale ?? (h < 0.8 ? 1.2 : 1);
@@ -232,6 +232,7 @@ export function Person({
       onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}
       onPointerOver={onClick ? () => (document.body.style.cursor = 'pointer') : undefined}
       onPointerOut={onClick ? () => (document.body.style.cursor = '') : undefined}>
+      {say && <Bubble text={say} y={2.2 + (hs - 1) * 0.7} />}
       <group ref={set('root')}>
         {/* ---------------- legs ---------------- */}
         {([-1, 1] as const).map((s) => (
@@ -368,6 +369,21 @@ export function Person({
         </group>
       </group>
     </group>
+  );
+}
+
+/* Comic thought bubble above the head */
+function Bubble({ text, y }: { text: string; y: number }) {
+  return (
+    <Html position={[0, y, 0]} center distanceFactor={7} zIndexRange={[15, 0]} style={{ pointerEvents: 'none' }}>
+      <div key={text} className="animate-pop-in relative flex flex-col items-center" style={{ width: 'max-content', maxWidth: 230 }}>
+        <div className="rounded-[22px] border-[3px] border-[#3a2a22] bg-white px-4 py-2.5 text-center font-display text-[17px] font-bold leading-snug text-[#1b2340] shadow-[0_6px_0_0_rgba(58,42,34,0.18)]">
+          {text}
+        </div>
+        <span className="mt-1 block size-4 -translate-x-2 rounded-full border-[3px] border-[#3a2a22] bg-white" />
+        <span className="mt-0.5 block size-2.5 -translate-x-4 rounded-full border-[2.5px] border-[#3a2a22] bg-white" />
+      </div>
+    </Html>
   );
 }
 

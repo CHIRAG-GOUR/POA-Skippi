@@ -146,6 +146,23 @@ export const RooIcon = (p: P) => (
   </svg>
 );
 
+export const MusicOnIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M9 18V5l11-2v13" />
+    <circle cx="6.5" cy="18" r="2.6" fill={soft} fillOpacity={0.3} />
+    <circle cx="17.5" cy="16" r="2.6" fill={soft} fillOpacity={0.3} />
+  </svg>
+);
+
+export const MusicOffIcon = (p: P) => (
+  <svg {...base(p)}>
+    <path d="M9 18V5l11-2v13" opacity={0.45} />
+    <circle cx="6.5" cy="18" r="2.6" opacity={0.45} />
+    <circle cx="17.5" cy="16" r="2.6" opacity={0.45} />
+    <path d="M3 3l18 18" />
+  </svg>
+);
+
 export const SECTION_POA_ICONS = {
   Sun: SunPopIcon,
   Clapperboard: SharkFinIcon,

@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import type { GradeBand } from '../content/poa';
 import { SECTIONS, SECTION_BY_ID, SPECIAL_BADGES, sectionOfActivity, type SectionId } from './sections';
 import { sfx } from '../audio/sfx';
+import { music } from '../audio/music';
 
 export type Route = { name: 'title' } | { name: 'island' } | { name: 'section'; id: SectionId } | { name: 'summary' };
 
@@ -22,6 +23,7 @@ export interface GameState {
   teamName: string;
   mentorView: boolean;
   sound: boolean;
+  music: boolean;
   quality: Quality;
   done: Record<string, number>; // `${grade}:${activityId}` -> timestamp
   answers: Record<string, unknown>; // `${grade}:${key}` -> value
@@ -37,6 +39,7 @@ export interface GameState {
   setTeamName: (n: string) => void;
   setMentorView: (v: boolean) => void;
   setSound: (v: boolean) => void;
+  setMusic: (v: boolean) => void;
   setQuality: (q: Quality) => void;
   go: (r: Route) => void;
   complete: (activityId: string) => void;
@@ -71,6 +74,7 @@ export const useGame = create<GameState>()(
       teamName: '',
       mentorView: false,
       sound: true,
+      music: true,
       quality: 'high',
       done: {},
       answers: {},
@@ -88,6 +92,10 @@ export const useGame = create<GameState>()(
         set({ sound: v });
       },
       setQuality: (q) => set({ quality: q }),
+      setMusic: (v) => {
+        if (v) music.start(); else music.stop();
+        set({ music: v });
+      },
 
       go: (r) => {
         const s = get();
@@ -174,6 +182,7 @@ export const useGame = create<GameState>()(
         teamName: s.teamName,
         mentorView: s.mentorView,
         sound: s.sound,
+        music: s.music,
         quality: s.quality,
         done: s.done,
         answers: s.answers,

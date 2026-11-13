@@ -180,13 +180,16 @@ export function IslandHud() {
         <MapIcon className="size-5" /> All places
       </button>
 
-      <AnimatePresence>
-        {def && (
-          <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }} className="pointer-events-auto fixed inset-x-3 bottom-20 z-40 mx-auto max-w-md sm:bottom-6">
-            <NearCard id={def.id} onEnter={() => go({ name: 'section', id: def.id })} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="pointer-events-none fixed inset-x-3 bottom-20 z-40 mx-auto flex max-w-md flex-col gap-2 sm:bottom-5">
+        <AnimatePresence>
+          {def && (
+            <motion.div key="near" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }} className="pointer-events-auto">
+              <NearCard id={def.id} onEnter={() => go({ name: 'section', id: def.id })} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <NextBar near={near ?? null} onHop={(id) => put('walkTo', id)} onEnter={(id) => go({ name: 'section', id })} />
+      </div>
 
       <AnimatePresence>
         {drawer && (
@@ -207,6 +210,25 @@ export function IslandHud() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+function NextBar({ near, onHop, onEnter }: { near: SectionId | null; onHop: (id: SectionId) => void; onEnter: (id: SectionId) => void }) {
+  const last = useGame((s) => s.lastSection);
+  const base = near ?? last;
+  const idx = base ? SECTIONS.findIndex((x) => x.id === base) : -1;
+  const nd = SECTIONS[(idx + 1) % SECTIONS.length];
+  const Icon = SECTION_ICONS[nd.icon];
+  return (
+    <div className="glass pointer-events-auto flex items-center gap-2 rounded-2xl p-2 pl-3 shadow-[var(--shadow-soft)] ring-1 ring-white">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: nd.color }}>{Icon && <Icon className="size-5" />}</span>
+      <span className="min-w-0 flex-1 leading-tight">
+        <span className="block text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink-soft">{idx < 0 ? 'Start here' : 'Next place'}</span>
+        <span className="block truncate font-display text-[15px] font-extrabold text-ink">{nd.n}. {nd.title}</span>
+      </span>
+      <Btn size="sm" variant="white" icon={Footprints} onClick={() => onHop(nd.id)} aria-label={`Hop Roo to ${nd.title}`}>Hop</Btn>
+      <Btn size="sm" variant="sun" iconRight={ArrowRight} onClick={() => onEnter(nd.id)}>Go</Btn>
+    </div>
   );
 }
 

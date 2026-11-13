@@ -38,7 +38,8 @@ export default function WorkshopScene() {
           return (
             <group key={r.id}>
               <mesh position={[x * 1.35, 0.13, z * 1.35]} rotation={[-Math.PI / 2, 0, 0]} material={sel ? emissive(RCOL[i], 0.5) : std(RCOL[i], 0.6)}><ringGeometry args={[0.5, 0.65, 32]} /></mesh>
-              <Person look={LOOK[i]} pose={sel ? 'present' : activity === 's11-rebuttal' ? (i % 2 ? 'talk' : 'think') : 'idle'} position={[x * 1.35, 0.1, z * 1.35]} />
+              <Person look={LOOK[i]} pose={sel ? 'present' : activity === 's11-rebuttal' ? (i % 2 ? 'talk' : 'think') : 'idle'} position={[x * 1.35, 0.1, z * 1.35]}
+                say={sel ? `I’m the ${r.role}!` : activity === 's11-rebuttal' && i === 1 ? 'Defend your plan!' : undefined} />
               <Sign position={[x * 1.9, 0.1, z * 1.9]} rotationY={Math.atan2(x, z)} title={r.role} w={1.5} h={0.45} bg={RCOL[i]} fg="#ffffff" accent="#ffffff" />
               <Hotspot position={[x * 1.35, 2.3, z * 1.35]} label={r.role} active={sel} color={RCOL[i]} small hideLabel onClick={() => setFocus(`role:${i}:${Date.now()}`)} />
             </group>

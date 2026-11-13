@@ -59,7 +59,7 @@ export default function NumbersScene() {
           <RoundedBox args={[1.8, 0.9, 0.7]} radius={0.06} position={[0, 0.45, 0]} material={std('#ffffff', 0.5)} castShadow />
           <Sign position={[0, 0.9, 0]} title="Practice Stall" body="Revenue − Expenses = Profit" w={1.8} h={0.6} post={false} bg="#2163e0" fg="#ffffff" />
           <CoinStack position={[-0.5, 0.9, 0.1]} n={profit?.kind === 'profit' ? 7 : 3} />
-          <Person look={LOOKS.seller} pose={profit ? (profit.kind === 'loss' ? 'sad' : profit.kind === 'even' ? 'think' : 'cheer') : 'idle'} mood={profit?.kind === 'loss' ? 'sad' : 'happy'} position={[0.5, 0, -0.75]} />
+          <Person look={LOOKS.seller} pose={profit ? (profit.kind === 'loss' ? 'sad' : profit.kind === 'even' ? 'think' : 'cheer') : 'idle'} mood={profit?.kind === 'loss' ? 'sad' : 'happy'} position={[0.5, 0, -0.75]} say={profit ? (profit.kind === 'profit' ? 'We made a profit!' : profit.kind === 'loss' ? 'Big sales… but a loss!' : 'Zero profit today.') : activity === 's5-profit' ? 'Revenue isn’t profit!' : undefined} />
           {profit?.kind === 'profit' && <PopConfetti position={[0, 0.4, 0]} count={14} spread={2} height={2.6} />}
         </group>
         {/* D. funding journey pads */}

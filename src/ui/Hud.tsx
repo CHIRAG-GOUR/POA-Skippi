@@ -4,6 +4,7 @@ import { Maximize, Minimize, Volume2, VolumeX, Settings, ArrowUp, Award, CircleC
 import { useGame, useProgress } from '../game/store';
 import { GRADE_BANDS, gradeLabel } from '../content/poa';
 import { ProgressRing, cx, Btn } from './kit';
+import { MusicOnIcon, MusicOffIcon } from './PoaIcons';
 
 /* ------------------------------------------------------------------ fullscreen (always top-right) */
 export function FullscreenButton() {
@@ -52,9 +53,20 @@ export function SoundButton() {
   );
 }
 
+export function MusicButton() {
+  const on = useGame((s) => s.music);
+  const setMusic = useGame((s) => s.setMusic);
+  return (
+    <HudIconBtn onClick={() => setMusic(!on)} label={on ? 'Stop background music' : 'Play background music'} active={on}>
+      {on ? <MusicOnIcon className="size-5" strokeWidth={2.4} /> : <MusicOffIcon className="size-5" strokeWidth={2.4} />}
+    </HudIconBtn>
+  );
+}
+
 export function TopRightControls({ onSettings }: { onSettings: () => void }) {
   return (
     <div className="pointer-events-auto fixed right-3 top-3 z-50 flex items-center gap-2 sm:right-4 sm:top-4">
+      <MusicButton />
       <SoundButton />
       <HudIconBtn onClick={onSettings} label="Settings"><Settings className="size-5" strokeWidth={2.5} /></HudIconBtn>
       <FullscreenButton />

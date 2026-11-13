@@ -42,7 +42,7 @@ export default function ArenaScene() {
         {solved && <PopConfetti position={[0, 0.3, 0]} count={40} spread={8} height={4} />}
         <SpotCone position={[0, 6, 2]} target={[0, 0, 0]} opacity={0.06} />
         <Person look={LOOKS.kid3} pose={activity === 's7-discuss' ? 'think' : solved ? 'cheer' : 'point'} position={[-1.4, 0.1, 2.8]} />
-        <Person look={LOOKS.parent} pose={activity === 's7-discuss' ? 'talk' : 'idle'} position={[1.4, 0.1, 2.8]} />
+        <Person look={LOOKS.parent} pose={activity === 's7-discuss' ? 'talk' : 'idle'} position={[1.4, 0.1, 2.8]} say={activity === 's7-discuss' ? 'Why Skippi over a gola?' : solved ? 'The matrix matches!' : undefined} />
         <PalmTree position={[-7.5, 0.1, -2.5]} />
         <PalmTree position={[7.4, 0.1, -1.5]} lean={-0.12} />
       </Island>

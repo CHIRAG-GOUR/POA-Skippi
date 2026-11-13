@@ -7,6 +7,7 @@ import { SectionShell, BackToIsland } from './ui/SectionShell';
 import { TopRightControls, ProgressBadge, Toasts, SettingsModal } from './ui/Hud';
 import { cx } from './ui/kit';
 import type { SectionId } from './game/sections';
+import { music } from './audio/music';
 
 export function App() {
   const route = useGame((s) => s.route);
@@ -40,6 +41,14 @@ export function App() {
       }, wait);
     });
     return () => { alive = false; clearInterval(tick); };
+  }, []);
+
+  // Background music: browsers only allow audio after the first tap/click/key.
+  useEffect(() => {
+    const kick = () => { if (useGame.getState().music) music.start(); };
+    window.addEventListener('pointerdown', kick, { once: true });
+    window.addEventListener('keydown', kick, { once: true });
+    return () => { window.removeEventListener('pointerdown', kick); window.removeEventListener('keydown', kick); };
   }, []);
 
   // Deep links for teachers: ?g=g45|g67|g89&s=s1..s13

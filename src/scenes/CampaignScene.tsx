@@ -52,10 +52,10 @@ export default function CampaignScene() {
           <mesh position={[0, 0.27, 0.4]} rotation={[-Math.PI / 2, 0, 0]} material={glossy('#4cc4f0', 0.05)}><circleGeometry args={[0.55, 24]} /></mesh>
         </group>
         {/* audience */}
-        <Person look={LOOKS.kid1} pose={crowdPose} position={[-0.6, 0.1, 3.2]} />
+        <Person look={LOOKS.kid1} pose={crowdPose} position={[-0.6, 0.1, 3.2]} say={launched ? 'Wow! I want one!' : undefined} />
         <Person look={LOOKS.parent} pose={launched ? 'clap' : 'idle'} position={[0.4, 0.1, 3.5]} />
         <Person look={LOOKS.kid2} pose={crowdPose} position={[1.3, 0.1, 3.1]} />
-        <Person look={LOOKS.seller} pose={activity === 's6-campaign' ? 'present' : 'talk'} position={[2.6, 0.1, 1.4]} />
+        <Person look={LOOKS.seller} pose={activity === 's6-campaign' ? 'present' : 'talk'} position={[2.6, 0.1, 1.4]} say={launched ? undefined : activity === 's6-campaign' ? 'Design your campaign!' : 'Dive into Delight!'} />
         {launched > 0 && <PopConfetti position={[0.5, 0.2, 1]} count={40} spread={6} height={4.5} />}
         <PalmTree position={[-8, 0.1, -2]} />
         <PalmTree position={[7.8, 0.1, 2.5]} lean={-0.12} />

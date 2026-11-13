@@ -74,6 +74,32 @@ export default function StudioScene({ variant = 's2' }: { variant?: string }) {
     return 'sit';
   };
   const sharkSeated = (i: number) => sharkPose(i) === 'sit';
+  const sharkLine = (i: number): string | undefined => {
+    if (i !== 2) return variant === 's8' && step === 1 && highlightShark === i ? 'I’m interested!' : undefined;
+    if (react === 'correct') return 'Great answer!';
+    if (react === 'wrong') return 'Hmm… think again.';
+    if (react === 'cheer') return variant === 's13' ? 'Well pitched, team!' : 'Bravo!';
+    if (variant === 's8' && step === 2) return 'It’s a deal!';
+    if (variant === 's8' && step === 5) return 'Why did revenue fall?';
+    if (variant === 's13' && presenting) return 'We’re listening…';
+    return undefined;
+  };
+  const pitchLine = (i: number): string | undefined => {
+    if (variant === 's8') {
+      if (i === 0 && step === 0) return '₹45 lakh for 5% equity!';
+      if (i === 1 && step === 2) return 'We accept ₹1 crore for 15%!';
+      if (i === 0 && step === 3) return 'We introduced freezer bikes!';
+      if (i === 1 && step === 4) return '₹10 crore Pre-Series A!';
+      return undefined;
+    }
+    if (variant === 's2' && !react) return i === 0 ? 'A childhood treat, made hygienic!' : undefined;
+    if (isTeam) {
+      if (i !== 2) return undefined;
+      if (presenting) return 'Sharks, here’s our idea!';
+      return variant === 's12' ? 'Let’s build our pitch!' : undefined;
+    }
+    return undefined;
+  };
 
   // pitchers
   const pitchPose = (i: number): Pose => {
@@ -113,7 +139,7 @@ export default function StudioScene({ variant = 's2' }: { variant?: string }) {
         return (
           <group key={name} position={p} rotation={[0, face, 0]}>
             <SharkChair color={['#1b2340', '#2b2f45', '#4e1f12', '#8f1340', '#163f99'][i]} />
-            <Person look={SHARK_LOOKS[i]} pose={sharkPose(i)} position={[0, sharkSeated(i) ? 0.12 : 0, sharkSeated(i) ? 0.02 : 0.55]} />
+            <Person look={SHARK_LOOKS[i]} pose={sharkPose(i)} position={[0, sharkSeated(i) ? 0.12 : 0, sharkSeated(i) ? 0.02 : 0.55]} say={sharkLine(i)} />
             <NamePlate name={name} lit={highlightShark === i} position={[0, 0.32, 0.75]} />
           </group>
         );
@@ -122,12 +148,12 @@ export default function StudioScene({ variant = 's2' }: { variant?: string }) {
       {/* pitchers */}
       {isTeam ? (
         TEAM.map((l, i) => (
-          <Person key={i} look={l} pose={pitchPose(i)} position={[(i - 2) * 0.75, 0.32, -0.2 + Math.abs(i - 2) * 0.25]} rotationY={Math.PI + (i - 2) * -0.15} />
+          <Person key={i} look={l} pose={pitchPose(i)} position={[(i - 2) * 0.75, 0.32, -0.2 + Math.abs(i - 2) * 0.25]} rotationY={Math.PI + (i - 2) * -0.15} say={pitchLine(i)} />
         ))
       ) : (
         <>
-          <Person look={LOOKS.ravi} pose={pitchPose(0)} position={[-0.5, 0.32, 0]} rotationY={Math.PI - 0.1} />
-          <Person look={LOOKS.anuja} pose={pitchPose(1)} position={[0.5, 0.32, 0]} rotationY={Math.PI + 0.1} />
+          <Person look={LOOKS.ravi} pose={pitchPose(0)} position={[-0.5, 0.32, 0]} rotationY={Math.PI - 0.1} say={pitchLine(0)} />
+          <Person look={LOOKS.anuja} pose={pitchPose(1)} position={[0.5, 0.32, 0]} rotationY={Math.PI + 0.1} say={pitchLine(1)} />
         </>
       )}
       {/* product display */}

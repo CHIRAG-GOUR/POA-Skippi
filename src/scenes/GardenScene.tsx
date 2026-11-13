@@ -30,7 +30,7 @@ export default function GardenScene() {
         {lit.length === 4 && <PopConfetti position={[0, 0.3, -1]} count={30} spread={7} height={3.5} />}
         <Bench position={[0, 0.1, 1.8]} rotationY={Math.PI} />
         <Person look={LOOKS.student3} pose={activity === 's10-reflect' ? 'think' : lit.length === 4 ? 'cheer' : 'idle'} position={[-0.4, 0.1, 2.3]} />
-        <Person look={LOOKS.student4} pose={activity === 's10-reflect' ? 'talk' : 'idle'} position={[0.5, 0.1, 2.3]} />
+        <Person look={LOOKS.student4} pose={activity === 's10-reflect' ? 'talk' : 'idle'} position={[0.5, 0.1, 2.3]} say={activity === 's10-reflect' ? 'What would I do as founder?' : lit.length === 4 ? 'All lanterns lit!' : undefined} />
         <group position={[1.8, 0.1, 1.6]} rotation={[0, -0.6, 0]}><Roo pose={activity === 's10-reflect' ? 'think' : 'point'} scale={0.85} /></group>
         <RoundTree position={[-5.5, 0.1, -3]} color="#7cc22b" />
         <RoundTree position={[5.6, 0.1, -2.6]} scale={0.9} color="#9ad94a" />

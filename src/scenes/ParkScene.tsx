@@ -60,18 +60,19 @@ export default function ParkScene() {
           <meshStandardMaterial color="#f6d9a2" roughness={0.95} />
         </mesh>
         <SkippiStall position={[0, 0.1, -1.2]} />
-        <Person look={LOOKS.seller} pose={activity === 's1-story' && chapter === 3 ? 'present' : 'wave'} position={[-0.45, 0.1, -2.05]} />
+        <Person look={LOOKS.seller} pose={activity === 's1-story' && chapter === 3 ? 'present' : 'wave'} position={[-0.45, 0.1, -2.05]}
+          say={activity === 's1-story' && chapter === 3 ? 'Skippi Ice Pops — Hyderabad, 2021!' : activity === 's1-overview' ? 'Find all 8 fact pops!' : activity === 's1-vmo' ? 'Open the three signposts!' : undefined} />
         {/* founders by their photo (original POA image) */}
         <group position={[2.6, 0.1, -1.6]} rotation={[0, -0.5, 0]}>
           <PhotoFrame src={INTRO.image.src} w={1.2} aspect={523 / 632} position={[0, 0, -0.6]} />
-          <Person look={LOOKS.ravi} pose={chapter === 2 && activity === 's1-story' ? 'talk' : 'idle'} position={[-0.5, 0, 0.2]} rotationY={0.2} />
-          <Person look={LOOKS.anuja} pose={chapter === 2 && activity === 's1-story' ? 'wave' : 'idle'} position={[0.45, 0, 0.25]} rotationY={-0.2} />
+          <Person look={LOOKS.ravi} pose={chapter === 2 && activity === 's1-story' ? 'talk' : 'idle'} position={[-0.5, 0, 0.2]} rotationY={0.2} say={chapter === 2 && activity === 's1-story' ? 'Let’s make ice pops hygienic, branded and modern!' : undefined} />
+          <Person look={LOOKS.anuja} pose={chapter === 2 && activity === 's1-story' ? 'wave' : 'idle'} position={[0.45, 0, 0.25]} rotationY={-0.2} say={chapter === 3 && activity === 's1-story' ? 'Ready-to-freeze, with RO water!' : undefined} />
         </group>
         {/* the familiar street treat */}
         <GolaCart position={[-3.4, 0.1, 1.6]} rotationY={0.8} />
-        <Person look={LOOKS.parent} pose={activity === 's1-story' && chapter === 1 ? 'think' : 'idle'} mood={chapter === 1 ? 'neutral' : 'happy'} position={[-2.4, 0.1, 2.6]} rotationY={-2.2} />
+        <Person look={LOOKS.parent} pose={activity === 's1-story' && chapter === 1 ? 'think' : 'idle'} mood={chapter === 1 ? 'neutral' : 'happy'} position={[-2.4, 0.1, 2.6]} rotationY={-2.2} say={activity === 's1-story' && chapter === 1 ? 'But was it made hygienically?' : undefined} />
         {/* kids with pops */}
-        <Person look={LOOKS.kid1} pose={activity === 's1-story' && chapter === 0 ? 'cheer' : 'idle'} position={[1.3, 0.1, 2.4]} rotationY={-0.6}>
+        <Person look={LOOKS.kid1} pose={activity === 's1-story' && chapter === 0 ? 'cheer' : 'idle'} position={[1.3, 0.1, 2.4]} rotationY={-0.6} say={activity === 's1-story' && chapter === 0 ? 'Summer holidays = ice pops!' : undefined}>
           <IcePop color={FLAVOURS[0].color} length={0.5} position={[0, -0.25, 0.04]} rotation={[0.3, 0, 0]} />
         </Person>
         <Person look={LOOKS.kid2} pose={activity === 's1-story' && chapter === 0 ? 'wave' : 'idle'} position={[2.1, 0.1, 2.9]} rotationY={-1.2}>
