@@ -374,24 +374,54 @@ export function SkippiStall({ position = [0, 0, 0] as V3, rotationY = 0, scale =
   );
 }
 
-/* ------------------------------------------------------------------ Freezer bike (Skippi introduced these in 2022) */
-export function FreezerBike({ position = [0, 0, 0] as V3, rotationY = 0, moving = false }: { position?: V3; rotationY?: number; moving?: boolean }) {
-  const wheels = useRef<THREE.Group[]>([]);
-  useFrame((_, dt) => { if (moving) wheels.current.forEach((w) => w && (w.rotation.x -= dt * 8)); });
-  const box = useMemo(() => signTexture({ title: 'SKIPPI', body: 'Freezer Bike', bg: '#ffffff', fg: '#2163e0', accent: '#e2336c', w: 1024, h: 600, titleSize: 200, bodySize: 80 }), []);
-  const frame = glossy('#e2336c', 0.3);
-  const tire = std('#1d1f2b', 0.8);
-  const wheel = (x: number, i: number) => (
-    <group key={i} ref={(r) => { if (r) wheels.current[i] = r; }} position={[x, 0.3, 0]} rotation={[0, 0, 0]}>
-      <mesh rotation={[0, Math.PI / 2, 0]} material={tire} castShadow><torusGeometry args={[0.27, 0.05, 10, 24]} /></mesh>
-      {[0, 1, 2].map((k) => (
-        <mesh key={k} rotation={[(k * Math.PI) / 3, 0, 0]} material={std('#c9ced8', 0.3, 0.6)}><boxGeometry args={[0.02, 0.5, 0.02]} /></mesh>
-      ))}
+/* ------------------------------------------------------------------ Wheel (axle along Z: the tyre faces the vehicle's side) */
+export function Wheel({ position = [0, 0, 0] as V3, radius = 0.3, width = 0.16, spin = false, hub = '#ffa514', spokes = 5 }: { position?: V3; radius?: number; width?: number; spin?: boolean; hub?: string; spokes?: number }) {
+  const g = useRef<THREE.Group>(null);
+  useFrame((_, dt) => { if (spin && g.current) g.current.rotation.z -= (dt * 2.4) / radius; });
+  const tube = radius * 0.26;
+  return (
+    <group position={position}>
+      <group ref={g}>
+        {/* rubber tyre */}
+        <mesh castShadow material={std('#23252f', 0.85)}>
+          <torusGeometry args={[radius - tube, tube, 14, 36]} />
+        </mesh>
+        {/* tread grooves */}
+        {[...Array(12)].map((_, k) => (
+          <mesh key={k} rotation={[0, 0, (k / 12) * Math.PI * 2]} position={[Math.cos((k / 12) * Math.PI * 2) * radius * 0.985, Math.sin((k / 12) * Math.PI * 2) * radius * 0.985, 0]} material={std('#15161c', 0.9)}>
+            <boxGeometry args={[0.012, radius * 0.16, width * 0.95]} />
+          </mesh>
+        ))}
+        {/* metal rim */}
+        <mesh rotation={[Math.PI / 2, 0, 0]} material={std('#d7dbe3', 0.25, 0.7)}>
+          <cylinderGeometry args={[radius - tube * 1.6, radius - tube * 1.6, width * 0.62, 28]} />
+        </mesh>
+        {/* spokes */}
+        {[...Array(spokes)].map((_, k) => (
+          <mesh key={k} rotation={[0, 0, (k / spokes) * Math.PI * 2]} position={[0, 0, 0]} material={std('#9aa3b5', 0.3, 0.6)}>
+            <boxGeometry args={[0.03, (radius - tube * 1.6) * 1.9, width * 0.66]} />
+          </mesh>
+        ))}
+        {/* hub cap */}
+        <mesh rotation={[Math.PI / 2, 0, 0]} material={glossy(hub, 0.25)}>
+          <cylinderGeometry args={[radius * 0.2, radius * 0.24, width * 0.9, 18]} />
+        </mesh>
+      </group>
     </group>
   );
+}
+
+/* ------------------------------------------------------------------ Freezer bike (Skippi introduced these in 2022) */
+export function FreezerBike({ position = [0, 0, 0] as V3, rotationY = 0, moving = false }: { position?: V3; rotationY?: number; moving?: boolean }) {
+  const box = useMemo(() => signTexture({ title: 'SKIPPI', body: 'Freezer Bike', bg: '#ffffff', fg: '#2163e0', accent: '#e2336c', w: 1024, h: 600, titleSize: 200, bodySize: 80 }), []);
+  const frame = glossy('#e2336c', 0.3);
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
-      {wheel(-0.75, 0)}{wheel(0.55, 1)}{wheel(1.05, 2)}
+      <Wheel position={[-0.75, 0.3, 0]} radius={0.3} width={0.1} spin={moving} hub="#e2336c" spokes={8} />
+      <Wheel position={[0.55, 0.28, 0.36]} radius={0.28} width={0.12} spin={moving} hub="#2163e0" spokes={8} />
+      <Wheel position={[0.55, 0.28, -0.36]} radius={0.28} width={0.12} spin={moving} hub="#2163e0" spokes={8} />
+      {/* rear axle */}
+      <mesh position={[0.55, 0.28, 0]} rotation={[Math.PI / 2, 0, 0]} material={std('#9aa3b5', 0.3, 0.6)}><cylinderGeometry args={[0.025, 0.025, 0.72, 8]} /></mesh>
       <mesh position={[-0.1, 0.62, 0]} rotation={[0, 0, 0.4]} material={frame} castShadow><cylinderGeometry args={[0.035, 0.035, 1.1, 8]} /></mesh>
       <mesh position={[-0.55, 0.85, 0]} material={std('#1d1f2b', 0.6)} castShadow><boxGeometry args={[0.28, 0.06, 0.16]} /></mesh>
       <mesh position={[-0.85, 0.95, 0]} rotation={[0, 0, -0.3]} material={frame}><cylinderGeometry args={[0.03, 0.03, 0.7, 8]} /></mesh>
@@ -443,8 +473,6 @@ export function Shop({ position = [0, 0, 0] as V3, rotationY = 0, name = 'KIRANA
 /* ------------------------------------------------------------------ Delivery van */
 export function Van({ position = [0, 0, 0] as V3, rotationY = 0, moving = false }: { position?: V3; rotationY?: number; moving?: boolean }) {
   const side = useMemo(() => signTexture({ title: 'SKIPPI', body: 'Ready-to-freeze ice pops', bg: '#ffffff', fg: '#2163e0', accent: '#ffa514', w: 1024, h: 420, titleSize: 170, bodySize: 54 }), []);
-  const wheels = useRef<THREE.Group>(null);
-  useFrame((_, dt) => { if (moving && wheels.current) wheels.current.children.forEach((c) => (c.rotation.z -= dt * 8)); });
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
       <RoundedBox args={[2.2, 1.3, 1.25]} radius={0.12} position={[-0.25, 1.0, 0]} material={std('#ffffff', 0.35)} castShadow />
@@ -452,13 +480,13 @@ export function Van({ position = [0, 0, 0] as V3, rotationY = 0, moving = false 
       <mesh position={[1.5, 1.0, 0]} rotation={[0, Math.PI / 2, 0]} material={glossy('#bfe6ff', 0.05)}><planeGeometry args={[1.0, 0.45]} /></mesh>
       <mesh position={[-0.25, 1.05, 0.63]}><planeGeometry args={[1.9, 0.8]} /><meshStandardMaterial map={side} /></mesh>
       <mesh position={[-0.25, 1.05, -0.63]} rotation={[0, Math.PI, 0]}><planeGeometry args={[1.9, 0.8]} /><meshStandardMaterial map={side} /></mesh>
-      <group ref={wheels}>
-        {[[-0.9, 0.62], [-0.9, -0.62], [1.15, 0.62], [1.15, -0.62]].map(([x, z], i) => (
-          <mesh key={i} position={[x, 0.3, z]} rotation={[Math.PI / 2, 0, 0]} material={std('#1d1f2b', 0.8)} castShadow>
-            <cylinderGeometry args={[0.3, 0.3, 0.2, 18]} />
-          </mesh>
-        ))}
-      </group>
+      {[[-0.9, 0.6], [-0.9, -0.6], [1.15, 0.6], [1.15, -0.6]].map(([x, z], i) => (
+        <Wheel key={i} position={[x, 0.32, z]} radius={0.32} width={0.22} spin={moving} hub="#ffa514" />
+      ))}
+      {/* wheel arches */}
+      {[-0.9, 1.15].map((x) => [0.63, -0.63].map((z) => (
+        <mesh key={`${x}${z}`} position={[x, 0.42, z]} material={std('#13317a', 0.5)}><torusGeometry args={[0.38, 0.04, 8, 20, Math.PI]} /></mesh>
+      )))}
     </group>
   );
 }
@@ -518,8 +546,17 @@ export function GolaCart({ position = [0, 0, 0] as V3, rotationY = 0 }: { positi
     <group position={position} rotation={[0, rotationY, 0]}>
       <RoundedBox args={[1.3, 0.7, 0.8]} radius={0.05} position={[0, 0.75, 0]} material={std('#7cc22b', 0.6)} castShadow />
       <mesh position={[0, 0.75, 0.405]}><planeGeometry args={[1.1, 0.3]} /><meshStandardMaterial map={sign} /></mesh>
-      {[-0.5, 0.5].map((x) => (
-        <mesh key={x} position={[x, 0.3, 0.42]} rotation={[0, Math.PI / 2, 0]} material={std('#1d1f2b', 0.8)} castShadow><torusGeometry args={[0.24, 0.05, 10, 22]} /></mesh>
+      {[-0.42, 0.42].map((x) => [0.44, -0.44].map((z) => (
+        <Wheel key={`${x}${z}`} position={[x, 0.26, z]} radius={0.26} width={0.1} hub="#e2336c" spokes={6} />
+      )))}
+      {/* axles */}
+      {[-0.42, 0.42].map((x) => (
+        <mesh key={x} position={[x, 0.26, 0]} rotation={[Math.PI / 2, 0, 0]} material={std('#9aa3b5', 0.3, 0.6)}><cylinderGeometry args={[0.03, 0.03, 0.9, 8]} /></mesh>
+      ))}
+      {/* push handle */}
+      <mesh position={[-0.85, 1.0, 0]} rotation={[Math.PI / 2, 0, 0]} material={glossy('#c9ced8', 0.3)}><cylinderGeometry args={[0.03, 0.03, 0.8, 8]} /></mesh>
+      {[0.36, -0.36].map((z) => (
+        <mesh key={z} position={[-0.75, 0.9, z]} rotation={[0, 0, 0.6]} material={glossy('#c9ced8', 0.3)}><cylinderGeometry args={[0.025, 0.025, 0.35, 8]} /></mesh>
       ))}
       {/* ice block + bottles */}
       <RoundedBox args={[0.45, 0.32, 0.4]} radius={0.05} position={[-0.25, 1.26, 0]} material={glossy('#dff4ff', 0.05)} />
