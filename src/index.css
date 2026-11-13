@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SKIPPI DESIGN SYSTEM
+   Palette drawn from the Skippi brand (royal-blue polo + pack, sunny orange
+   logo burst, and the six pop flavours) — light, warm and playful.
+   ========================================================================== */
+@theme {
+  --font-display: "Baloo 2", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  --color-skippi-50: #eef5ff;
+  --color-skippi-100: #d9e8ff;
+  --color-skippi-200: #b4d0ff;
+  --color-skippi-300: #7fb0ff;
+  --color-skippi-400: #4a8bf5;
+  --color-skippi-500: #2163e0;
+  --color-skippi-600: #1a4fc0;
+  --color-skippi-700: #163f99;
+  --color-skippi-800: #13317a;
+  --color-skippi-900: #0f2459;
+
+  --color-mango-100: #fff1d1;
+  --color-mango-300: #ffd27a;
+  --color-mango-400: #ffbd3d;
+  --color-mango-500: #ffa514;
+  --color-mango-600: #e88a00;
+
+  --color-rasp-100: #ffe0ea;
+  --color-rasp-400: #f5578a;
+  --color-rasp-500: #e2336c;
+  --color-rasp-600: #c01f55;
+
+  --color-lime-100: #ecf9d6;
+  --color-lime-400: #9ad94a;
+  --color-lime-500: #7cc22b;
+  --color-lime-600: #5d9a17;
+
+  --color-bubble-100: #ffe6f4;
+  --color-bubble-400: #ff7cc0;
+  --color-bubble-500: #f056a8;
+
+  --color-orangepop-400: #ff8a3d;
+  --color-orangepop-500: #f56d14;
+
+  --color-cola-500: #7a3522;
+  --color-cola-700: #4e1f12;
+
+  --color-cream: #fff8ec;
+  --color-ink: #1b2340;
+  --color-ink-soft: #4a5378;
+
+  --radius-blob: 1.75rem;
+  --shadow-pop: 0 6px 0 0 rgb(15 36 89 / 0.18), 0 14px 28px -10px rgb(15 36 89 / 0.35);
+  --shadow-pop-sm: 0 3px 0 0 rgb(15 36 89 / 0.16), 0 8px 18px -8px rgb(15 36 89 / 0.3);
+  --shadow-soft: 0 10px 40px -12px rgb(15 36 89 / 0.25);
+
+  --animate-pop-in: pop-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-shine: shine 2.6s linear infinite;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.7) translateY(14px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-3deg); }
+  60% { transform: rotate(3deg); }
+}
+
+@layer base {
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body, #root { margin: 0; width: 100%; height: 100%; }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background: #bfe6ff;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
+  button { cursor: pointer; font: inherit; }
+  button:disabled { cursor: not-allowed; }
+  :focus-visible { outline: 3px solid var(--color-mango-400); outline-offset: 2px; border-radius: 10px; }
+  textarea, input { font: inherit; }
+}
+
+@layer components {
+  /* Candy stripe used on headers / banners */
+  .stripe-candy {
+    background-image: repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.18) 0 12px, transparent 12px 24px);
+  }
+  .glass {
+    background: rgb(255 255 255 / 0.86);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .text-outline {
+    -webkit-text-stroke: 2px var(--color-skippi-900);
+    paint-order: stroke fill;
+  }
+  .scroll-soft { scrollbar-width: thin; scrollbar-color: var(--color-skippi-300) transparent; }
+  .scroll-soft::-webkit-scrollbar { width: 8px; }
+  .scroll-soft::-webkit-scrollbar-thumb { background: var(--color-skippi-200); border-radius: 8px; }
+  .shine-bar {
+    background-image: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: var(--animate-shine);
+  }
+  .wobble:hover { animation: wobble 0.5s ease-in-out; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

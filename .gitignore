@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.firebase/
+*.log
+.DS_Store
+# Source POA document is kept locally; its full content lives in src/content/poa.ts
+*.docx
