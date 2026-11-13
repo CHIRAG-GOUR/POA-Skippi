@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { ArrowRight, MessageCircle, Shield } from 'lucide-react';
 import { REBUTTAL, ROLES, gradeLabel } from '../content/poa';
 import { useAnswer, useDone, useGame, useScene } from '../game/store';
+import type { GameState } from '../game/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Btn, H3, Kicker, TextResponse, DoneStamp, GradeTag, cx } from '../ui/kit';
 import { GradeBlock } from '../ui/SectionShell';
 
@@ -85,7 +87,7 @@ function Defend() {
   const probs = REBUTTAL.problems[grade];
   const ok = useGame((s) => probs.every((_, i) => String(s.answers[`${grade}:s11.q.${i}`] ?? '').trim().length >= 8 && String(s.answers[`${grade}:s11.d.${i}`] ?? '').trim().length >= 15));
   useEffect(() => { if (ok) complete('s11-rebuttal'); }, [ok, complete]);
-  const plans = useGame((s) => probs.map((_, i) => String(s.answers[`${grade}:s11.plan.${i}`] ?? '')));
+  const plans = useGame(useShallow((s: GameState) => probs.map((_, i) => String(s.answers[`${grade}:s11.plan.${i}`] ?? ''))));
   return (
     <div className="space-y-4">
       <H3>Rebuttal round</H3>

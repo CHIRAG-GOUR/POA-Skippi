@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { HAPPENED } from '../content/poa';
 import { useAnswer, useDone, useGame, useScene } from '../game/store';
+import type { GameState } from '../game/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Btn, Kicker, H3, VideoEmbed, ExtLink, MentorNote, TextResponse, DoneStamp, Insight, cx } from '../ui/kit';
 import { sfx } from '../audio/sfx';
 
@@ -85,7 +87,7 @@ function Investigate() {
   const [picked, setPicked] = useAnswer<number[]>('s8.picked', []);
   const complete = useGame((s) => s.complete);
   const done = useDone('s8-investigate');
-  const whys = useGame((s) => picked.map((i) => String((s.grade && s.answers[`${s.grade}:s8.why.${i}`]) ?? '')));
+  const whys = useGame(useShallow((s: GameState) => picked.map((i) => String((s.grade && s.answers[`${s.grade}:s8.why.${i}`]) ?? ''))));
   useEffect(() => {
     if (picked.length === 3 && whys.every((w) => w.trim().length >= 12)) complete('s8-investigate');
   }, [picked, whys, complete]);

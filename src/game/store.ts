@@ -16,7 +16,7 @@ interface Toast {
   body?: string;
 }
 
-interface GameState {
+export interface GameState {
   // persisted
   grade: GradeBand | null;
   teamName: string;

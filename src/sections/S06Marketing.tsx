@@ -74,7 +74,7 @@ function Builder() {
         <span className="mb-1 block text-[15px] font-bold">Platform</span>
         <div className="grid grid-cols-2 gap-2">
           {MARKETING.platforms.map((p) => (
-            <button key={p} onClick={() => { sfx.pop(); upd('platform', p); }} className={cx('rounded-2xl px-3 py-2.5 font-display text-[15px] font-bold capitalize ring-2 transition', d.platform === p ? 'bg-rasp-500 text-white ring-rasp-500' : 'bg-white ring-skippi-100 hover:ring-rasp-300')}>{p}</button>
+            <button key={p} onClick={() => { sfx.pop(); upd('platform', p); }} className={cx('rounded-2xl px-3 py-2.5 font-display text-[15px] font-bold ring-2 transition', d.platform === p ? 'bg-rasp-500 text-white ring-rasp-500' : 'bg-white ring-skippi-100 hover:ring-rasp-300')}>{p}</button>
           ))}
         </div>
       </div>

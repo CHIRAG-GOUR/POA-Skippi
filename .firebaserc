@@ -1,0 +1,4 @@
+{
+  "projects": { "default": "skillizee-products" },
+  "targets": { "skillizee-products": { "hosting": { "poa-skippi": ["poa-skippi"] } } }
+}

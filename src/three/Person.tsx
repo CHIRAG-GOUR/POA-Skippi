@@ -350,7 +350,7 @@ export function Person({
               ))}
               <Hair3D style={look.hairStyle} m={hairM} R={R} />
               {look.cap && (
-                <group position={[0, R * 0.32, 0]} rotation={[-0.12, 0, 0]}>
+                <group position={[0, R * 0.52, -0.01]} rotation={[-0.18, 0, 0]}>
                   <mesh material={toon(look.cap)} scale={[1.05, 0.7, 1.05]}><sphereGeometry args={[R, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2]} />{ink(0.01)}</mesh>
                   <mesh position={[0, 0.005, R * 0.95]} rotation={[0.15, 0, 0]} material={toon(shade(look.cap, -0.1))} scale={[1, 0.12, 0.75]}><cylinderGeometry args={[R * 0.8, R * 0.8, 0.12, 22, 1, false, -Math.PI / 2, Math.PI]} />{ink(0.008)}</mesh>
                 </group>

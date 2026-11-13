@@ -199,9 +199,6 @@ function StudioSet({ screen }: { screen: ScreenContent }) {
         <boxGeometry args={[11, 0.16, 3.2]} />
       </mesh>
       {/* back wall + screen (behind the pitchers, facing sharks? no: behind sharks facing camera) */}
-      <group position={[0, 0, 4.8]} rotation={[0, Math.PI, 0]}>
-        <mesh position={[0, 3, 0.2]} material={std('#ffd27a', 0.8)}><boxGeometry args={[16, 6, 0.2]} /></mesh>
-      </group>
       <group position={[0, 0, -6.4]}>
         <mesh position={[0, 3.2, -0.15]} receiveShadow material={std('#2163e0', 0.7)}><boxGeometry args={[16, 6.4, 0.2]} /></mesh>
         {[...Array(9)].map((_, i) => (
